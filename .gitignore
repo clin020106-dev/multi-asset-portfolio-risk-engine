@@ -1,0 +1,48 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Virtual environment
+.venv/
+
+# Secrets
+.env
+*.key
+*.pem
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Local data
+data/raw/*
+data/interim/*
+data/processed/*
+data/reference/*
+!data/**/.gitkeep
+!data/sample/**
+
+# Generated outputs
+outputs/reports/*
+outputs/charts/*
+outputs/risk_results/*
+!outputs/**/.gitkeep
+
+# Logs and caches
+logs/
+cache/
+*.log
+
+# macOS
+.DS_Store
+
+# IDE
+.vscode/
+.idea/
+
