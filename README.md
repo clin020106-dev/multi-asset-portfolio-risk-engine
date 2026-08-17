@@ -4,7 +4,7 @@
 
 The goal of v0.1 is to estimate the one-day market risk of a multi-asset portfolio in USD using sample daily market data.
 
-### Included in v0.1
+### Included in v0.1›
 
 - Base currency: USD
 - Data frequency: Daily
@@ -26,8 +26,12 @@ The goal of v0.1 is to estimate the one-day market risk of a multi-asset portfol
 - Advanced derivatives pricing models
 - Production deployment, user authentication, and graphical user interface
 
+
+
 ## v0.1 Completion Criteria
 
 - [Methodology](docs/methodology.md) — Detailed inputs, assumptions, Historical Simulation process, VaR and ES calculations, outputs, and limitations.
+- [Data Dictionary](docs/data_dictionary.md) — Input file schemas, field definitions, validation rules, and sample-data conventions.
 
 > This project is for educational and demonstration purposes only and does not constitute investment advice.
+
