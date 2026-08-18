@@ -1,0 +1,7 @@
+position_id,asset_id,asset_name,asset_class,quantity,currency
+P001,US_EQUITY,US Equity Index,equity,100,USD
+P002,EU_EQUITY,European Equity Index,equity,80,EUR
+P003,US_GOV_BOND,US Government Bond,government_bond,100,USD
+P004,US_IG_CORP_BOND,US Investment Grade Corporate Bond,corporate_bond,75,USD
+P005,US_HIGH_YIELD_BOND,US High Yield Bond,high_yield_bond,60,USD
+P006,GOLD,Gold,commodity,25,USD

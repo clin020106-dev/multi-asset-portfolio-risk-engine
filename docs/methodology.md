@@ -15,11 +15,11 @@ This document explains the methodology used in v0.1 of the Multi-Asset Portfolio
 | Historical observation window | 250 trading days |
 | Method | Historical Simulation |
 | Risk measures | Value at Risk (VaR) and Expected Shortfall (ES) |
-| Data source | Project-provided sample data |
+| Data source | Project-provided synthetic sample data |
 
 ## Input Data
 
-v0.1 uses project-provided sample data instead of live market data or external data-provider connections.
+v0.1 uses project-provided synthetic sample data instead of live market data or external data-provider connections. The sample data is generated from fixed illustrative assumptions and is not calibrated to current or historical market conditions.
 
 The calculation requires the following inputs:
 

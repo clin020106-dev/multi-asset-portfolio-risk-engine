@@ -35,3 +35,14 @@ The goal of v0.1 is to estimate the one-day market risk of a multi-asset portfol
 
 > This project is for educational and demonstration purposes only and does not constitute investment advice.
 
+## Sample Data
+
+The version-controlled files in `data/sample/` contain synthetic market data for demonstration and testing. They are generated from fixed illustrative assumptions and are not calibrated to current or historical market conditions.
+
+To regenerate the sample price and FX data:
+
+```bash
+python scripts/generate_sample_data.py
+```
+
+The generator uses a fixed random seed so that repeated runs produce identical output files.

@@ -116,8 +116,10 @@ The following rows illustrate the required structure. They are not the complete 
 position_id,asset_id,asset_name,asset_class,quantity,currency
 P001,US_EQUITY,US Equity Index,equity,100,USD
 P002,EU_EQUITY,European Equity Index,equity,80,EUR
-P003,US_BOND,US Treasury Bond,fixed_income,50,USD
-P004,GOLD,Gold Commodity,commodity,25,USD
+P003,US_GOV_BOND,US Government Bond,government_bond,100,USD
+P004,US_IG_CORP_BOND,US Investment Grade Corporate Bond,corporate_bond,75,USD
+P005,US_HIGH_YIELD_BOND,US High Yield Bond,high_yield_bond,60,USD
+P006,GOLD,Gold,commodity,25,USD
 ```
 
 ### `prices.csv`
@@ -126,7 +128,9 @@ P004,GOLD,Gold Commodity,commodity,25,USD
 date,asset_id,price,currency
 2025-01-02,US_EQUITY,150.25,USD
 2025-01-02,EU_EQUITY,120.40,EUR
-2025-01-02,US_BOND,98.75,USD
+2025-01-02,US_GOV_BOND,98.75,USD
+2025-01-02,US_IG_CORP_BOND,102.30,USD
+2025-01-02,US_HIGH_YIELD_BOND,95.60,USD
 2025-01-02,GOLD,205.60,USD
 ```
 
@@ -145,6 +149,6 @@ Warnings may be used for non-blocking issues that do not change the validity of 
 
 ## Sample Data Reproducibility
 
-The v0.1 sample input files are project-provided, version-controlled datasets intended for demonstration and testing. They do not represent live market data or investment recommendations.
+The v0.1 sample input files are synthetic, project-provided, version-controlled datasets intended solely for demonstration and testing. They are generated using fixed illustrative assumptions and are not calibrated to current or historical market conditions. They do not represent live market data, forecasts, or investment recommendations.
 
 A calculation record should identify the input-file versions, valuation date, and 251 aligned dates used to create the 250 daily return scenarios. Unchanged input files and configuration must produce identical validated inputs and risk results.
