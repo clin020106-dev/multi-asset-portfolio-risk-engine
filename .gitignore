@@ -26,13 +26,14 @@ data/interim/*
 data/processed/*
 data/reference/*
 !data/**/.gitkeep
-!data/sample/**
 
-# Generated outputs
+# Detailed row-level model output is reproducible and not needed in the portfolio.
+outputs/model_results/walk_forward_predictions.csv
+
+# Generated reports may be committed as portfolio evidence.
 outputs/reports/*
-outputs/charts/*
-outputs/risk_results/*
-!outputs/**/.gitkeep
+!outputs/reports/.gitkeep
+!outputs/reports/management_interpretation.md
 
 # Logs and caches
 logs/
@@ -45,4 +46,3 @@ cache/
 # IDE
 .vscode/
 .idea/
-
