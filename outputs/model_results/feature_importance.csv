@@ -1,9 +1,9 @@
 feature,importance
-return_20d,0.25410524
-equity_return_5d,0.13850595
-return_5d,0.11605033
-bond_return_5d,0.11516897
-volatility_5d,0.110864855
-volatility_20d,0.09525877
-return_1d,0.087576985
-gold_return_5d,0.08246886
+return_20d,0.24983689
+equity_return_5d,0.1404781
+return_5d,0.116153546
+bond_return_5d,0.11421694
+volatility_5d,0.11352269
+volatility_20d,0.09563934
+gold_return_5d,0.08745253
+return_1d,0.0826999

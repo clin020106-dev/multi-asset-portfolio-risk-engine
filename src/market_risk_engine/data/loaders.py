@@ -3,22 +3,10 @@ from pathlib import Path
 
 import pandas as pd
 
-_POSITIONS_COLUMNS = (
-    "position_id",
-    "asset_id",
-    "asset_name",
-    "asset_class",
-    "quantity",
-    "currency",
-)
+_POSITIONS_COLUMNS = ("position_id","asset_id", "asset_name", "asset_class", "quantity", "currency")
 _PRICES_COLUMNS = ("date", "asset_id", "price", "currency")
 _FX_RATES_COLUMNS = ("date", "currency", "usd_per_unit")
-_INTEREST_RATE_COLUMNS = (
-    "date",
-    "fed_funds_rate",
-    "treasury_2y_yield",
-    "treasury_10y_yield",
-)
+_INTEREST_RATE_COLUMNS = ("date", "fed_funds_rate", "treasury_2y_yield", "treasury_10y_yield",)
 
 
 def _load_csv(path: str | Path, required_columns: tuple[str, ...]) -> pd.DataFrame:
@@ -35,7 +23,6 @@ def _load_csv(path: str | Path, required_columns: tuple[str, ...]) -> pd.DataFra
 
 
 def _parse_dates(frame: pd.DataFrame, path: str | Path) -> None:
-    """Parse the date column and fail clearly when a date is unusable."""
     try:
         frame["date"] = pd.to_datetime(frame["date"], errors="raise")
     except (TypeError, ValueError) as exc:

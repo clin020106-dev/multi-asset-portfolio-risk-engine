@@ -35,12 +35,7 @@ RATE_FEATURES = [
 
 
 def full_usd_price_history(prices: pd.DataFrame) -> pd.DataFrame:
-    """Create a complete date-by-asset USD price table."""
-    df = prices.pivot(
-        index="date",
-        columns="asset_id",
-        values="price_usd",
-    )
+    df = prices.pivot(index="date", columns="asset_id", values="price_usd")
     df = df.dropna()
     df = df.sort_index()
 
@@ -51,7 +46,6 @@ def portfolio_daily_returns(
     prices: pd.DataFrame,
     positions: pd.DataFrame,
 ) -> pd.DataFrame:
-    """Calculate daily asset and weighted portfolio returns."""
     df = prices.pct_change()
     df = df.dropna()
 
@@ -62,7 +56,6 @@ def portfolio_daily_returns(
 
 
 def create_high_loss_target(returns: pd.DataFrame) -> pd.DataFrame:
-    """Label next-day returns below the trailing 10th percentile as high loss."""
     df = returns.copy()
     df["loss_threshold"] = df["portfolio_return"].rolling(window=252).quantile(0.10)
     df["next_day_return"] = df["portfolio_return"].shift(-1)
@@ -73,7 +66,6 @@ def create_high_loss_target(returns: pd.DataFrame) -> pd.DataFrame:
 
 
 def create_predictive_features(data: pd.DataFrame) -> pd.DataFrame:
-    """Create lagged market features for high-loss prediction."""
     df = data.copy()
     df["return_1d"] = df["portfolio_return"]
     df["return_5d"] = df["portfolio_return"].rolling(window=5).mean()
@@ -88,18 +80,10 @@ def create_predictive_features(data: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
-def add_interest_rate_features(
-    data: pd.DataFrame,
-    interest_rates: pd.DataFrame,
-) -> pd.DataFrame:
-    """Add one-day-lagged U.S. policy-rate and Treasury-yield features."""
+def add_interest_rate_features(data: pd.DataFrame, interest_rates: pd.DataFrame) -> pd.DataFrame:
     df = data.reset_index()
     rates = interest_rates.copy()
-    rate_columns = [
-        "fed_funds_rate",
-        "treasury_2y_yield",
-        "treasury_10y_yield",
-    ]
+    rate_columns = ["fed_funds_rate", "treasury_2y_yield", "treasury_10y_yield"]
     rates[rate_columns] = rates[rate_columns].shift(1)
 
     df = df.merge(rates, on="date", how="left")
@@ -115,27 +99,17 @@ def add_interest_rate_features(
 
 
 def train_logistic_model(
-    train: pd.DataFrame,
-    feature_columns: list[str],
+    train: pd.DataFrame, feature_columns: list[str]
 ) -> tuple[LogisticRegression, StandardScaler]:
-    """Train a class-balanced standardized Logistic Regression model."""
     scaler = StandardScaler()
     x_train = scaler.fit_transform(train[feature_columns])
-    model = LogisticRegression(
-        class_weight="balanced",
-        max_iter=1_000,
-        random_state=42,
-    )
+    model = LogisticRegression(class_weight="balanced", max_iter=1_000, random_state=42)
     model.fit(x_train, train["high_loss"])
 
     return model, scaler
 
 
-def train_xgboost_model(
-    train: pd.DataFrame,
-    feature_columns: list[str],
-) -> XGBClassifier:
-    """Train a small class-balanced XGBoost challenger model."""
+def train_xgboost_model(train: pd.DataFrame, feature_columns: list[str]) -> XGBClassifier:
     target = train["high_loss"]
     negative_count = int((target == 0).sum())
     positive_count = int((target == 1).sum())
@@ -155,16 +129,11 @@ def train_xgboost_model(
 
 
 def classification_metrics(
-    actual: pd.Series,
-    probability: pd.Series,
-    threshold: float = 0.50,
+    actual: pd.Series, probability: pd.Series, threshold: float = 0.50
 ) -> dict[str, float | int]:
-    """Calculate ranking and threshold metrics for a high-loss classifier."""
     prediction = (probability >= threshold).astype(int)
     true_negative, false_positive, false_negative, true_positive = confusion_matrix(
-        actual,
-        prediction,
-        labels=[0, 1],
+        actual, prediction, labels=[0, 1]
     ).ravel()
 
     return {
@@ -187,7 +156,6 @@ def walk_forward_evaluation(
     data: pd.DataFrame,
     test_years: range,
 ) -> tuple[pd.DataFrame, pd.DataFrame]:
-    """Evaluate fixed model specifications on successive unseen calendar years."""
     configurations = [
         ("Volatility score", "volatility", ["volatility_20d"]),
         ("Logistic (market)", "logistic", BASE_FEATURES),
@@ -217,11 +185,7 @@ def walk_forward_evaluation(
                 probability_values = model.predict_proba(test[feature_columns])[:, 1]
 
             probability = pd.Series(probability_values, index=test.index)
-            metrics = classification_metrics(
-                test["high_loss"],
-                probability,
-                threshold=threshold,
-            )
+            metrics = classification_metrics(test["high_loss"], probability, threshold=threshold)
             metric_rows.append({"year": year, "model": model_name, **metrics})
 
             prediction_rows.append(

@@ -19,6 +19,7 @@ from market_risk_engine.risk.historical import (
     pivot_usd_prices,
     value_at_risk,
 )
+from market_risk_engine.risk.stress import run_stress_tests
 
 positions = load_positions("data/processed/positions.csv")
 prices = load_prices("data/processed/prices.csv")
@@ -33,6 +34,7 @@ df = calculate_usd_market_values(df)
 df = portfolio_weights(df)
 
 portfolio_value = df["market_value_usd"].sum()
+stress_results, stress_summary = run_stress_tests(df)
 
 usd_prices = convert_prices_to_usd(prices, fx_rates)
 usd_prices = pivot_usd_prices(usd_prices)
@@ -71,19 +73,12 @@ print(f"99% ES:  USD {es_99:,.2f}")
 print("Worst five scenarios:")
 print(worst_scenarios)
 
-df.to_csv(
-    "outputs/risk_results/portfolio_valuation.csv",
-    index=False,
-)
-worst_scenarios.to_csv(
-    "outputs/risk_results/worst_scenarios.csv",
-    index=True,
-    index_label="date",
-)
-risk_summary.to_csv(
-    "outputs/risk_results/risk_summary.csv",
-    index=False,
-)
+df.to_csv("outputs/risk_results/portfolio_valuation.csv", index=False)
+worst_scenarios.to_csv("outputs/risk_results/worst_scenarios.csv", index=True, index_label="date")
+risk_summary.to_csv("outputs/risk_results/risk_summary.csv", index=False)
+stress_results.to_csv("outputs/risk_results/stress_test_details.csv", index=False)
+
+stress_summary.to_csv("outputs/risk_results/stress_test_summary.csv", index=False)
 
 chart_data = df.sort_values("portfolio_weight")
 
@@ -107,18 +102,8 @@ plt.hist(
     bins=30,
     edgecolor="black",
 )
-plt.axvline(
-    var_95,
-    color="orange",
-    linestyle="--",
-    label=f"95% VaR: USD {var_95:,.2f}",
-)
-plt.axvline(
-    var_99,
-    color="red",
-    linestyle="--",
-    label=f"99% VaR: USD {var_99:,.2f}",
-)
+plt.axvline(var_95, color="orange", linestyle="--", label=f"95% VaR: USD {var_95:,.2f}")
+plt.axvline(var_99, color="red", linestyle="--", label=f"99% VaR: USD {var_99:,.2f}")
 plt.xlabel("One-Day Loss (USD)")
 plt.ylabel("Number of Scenarios")
 plt.title("Historical Simulation Loss Distribution")
@@ -147,8 +132,18 @@ plt.axvline(0, color="black", linewidth=1)
 plt.xlabel("P&L Contribution (USD)")
 plt.title(f"Worst Scenario Contributions ({worst_date.date()})")
 plt.tight_layout()
-plt.savefig(
-    "outputs/charts/worst_scenario_contributions.png",
-    dpi=150,
-)
+plt.savefig("outputs/charts/worst_scenario_contributions.png", dpi=150)
+plt.close()
+
+stress_chart = stress_summary.sort_values("loss_percent")
+
+plt.figure(figsize=(10, 6))
+
+bars = plt.barh(stress_chart["scenario"], stress_chart["loss_percent"] * 100, color="darkred")
+
+plt.bar_label(bars, fmt="%.1f%%")
+plt.xlabel("Portfolio Loss (%)")
+plt.title("Portfolio Loss Under Stress Scenarios")
+plt.tight_layout()
+plt.savefig("outputs/charts/stress_test_losses.png", dpi=150)
 plt.close()

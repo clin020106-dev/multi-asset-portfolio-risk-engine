@@ -46,12 +46,12 @@ The risk calculation uses the latest 250 aligned daily return scenarios.
 
 | Risk Measure | USD | % of Portfolio |
 | --- | ---: | ---: |
-| 95% VaR | 625.92 | 0.63% |
+| 95% VaR | 625.91 | 0.63% |
 | 95% Expected Shortfall | 1,139.60 | 1.14% |
 | 99% VaR | 1,578.95 | 1.58% |
-| 99% Expected Shortfall | 1,997.08 | 2.00% |
+| 99% Expected Shortfall | 1,997.09 | 2.00% |
 
-The worst scenario occurred on **4 April 2025**, producing a loss of **USD 2,705.91
+The worst scenario occurred on **4 April 2025**, producing a loss of **USD 2,705.90
 (2.71%)**. U.S. and European equities contributed approximately 87.5% of that loss.
 U.S. government bonds provided a small offset, while gold also lost value. The date
 coincides with a tariff-driven global selloff and subsequent retaliation reported by
@@ -60,6 +60,28 @@ coincides with a tariff-driven global selloff and subsequent retaliation reporte
 ![Historical loss distribution](outputs/charts/loss_distribution.png)
 
 ![Worst scenario contributions](outputs/charts/worst_scenario_contributions.png)
+
+## Stress Testing
+
+Three hypothetical stress scenarios are used to assess losses beyond those observed in
+the recent Historical Simulation window.
+
+| Scenario | Portfolio Loss | Loss % |
+| --- | ---: | ---: |
+| Equity Selloff | USD 8,000 | 8.00% |
+| Rates and Credit Shock | USD 8,150 | 8.15% |
+| Broad Liquidity Crisis | USD 14,300 | 14.30% |
+
+The Broad Liquidity Crisis produces the largest loss because equities, bonds, and gold
+decline at the same time. This illustrates that diversification may provide limited
+protection when normally different asset classes become correlated during a market
+crisis.
+
+The stress losses are materially larger than the Historical VaR and Expected Shortfall
+estimates. Unlike the predictive models, these scenarios do not estimate the probability
+of an event. They measure the portfolio impact if the specified shocks occur.
+
+![Stress test losses](outputs/charts/stress_test_losses.png)
 
 ## Predictive Tail-Risk Extension
 
@@ -95,8 +117,8 @@ captures changing market regimes and avoids training on future data.
 | Volatility score | 0.500 | 0.130 | 0.069 | 0.243 | 0.104 |
 | Logistic — market | **0.571** | **0.151** | 0.135 | **0.448** | **0.204** |
 | Logistic — market + rates | 0.543 | 0.145 | 0.135 | 0.363 | 0.164 |
-| XGBoost — market | **0.571** | 0.139 | 0.135 | 0.409 | 0.190 |
-| XGBoost — market + rates | 0.552 | 0.139 | 0.134 | 0.175 | 0.130 |
+| XGBoost — market | 0.570 | 0.137 | 0.137 | 0.422 | 0.195 |
+| XGBoost — market + rates | 0.545 | 0.139 | 0.132 | 0.175 | 0.131 |
 
 The mean high-loss event rate is 10.5%. The market-only Logistic model achieves the
 highest mean Average Precision at 0.151, a 1.44x lift over the event-rate baseline. It is
@@ -126,8 +148,8 @@ below the fixed 50% alert threshold:
 | Model | High-Loss Risk Score | Classification |
 | --- | ---: | --- |
 | Logistic — market | 41.0% | Normal-risk class |
-| XGBoost — market | 33.7% | Normal-risk class |
-| XGBoost — market + rates | 24.8% | Normal-risk class |
+| XGBoost — market | 33.2% | Normal-risk class |
+| XGBoost — market + rates | 25.1% | Normal-risk class |
 
 Class balancing changes the models' score distributions, so these values are
 **uncalibrated risk scores**, not literal probabilities that a loss will occur.
@@ -190,10 +212,10 @@ data/processed/                 Downloaded and analysis-ready CSV files
 docs/                           Methodology and data dictionary
 outputs/charts/                 Portfolio-ready charts
 outputs/model_results/          Walk-forward metrics and predictions
-outputs/risk_results/           Valuation, VaR, ES, and worst scenarios
+outputs/risk_results/           Valuation, VaR, ES, stress tests, and worst scenarios
 scripts/download_market_data.py Market and FX download
 scripts/download_rate_data.py   FRED interest-rate download
-scripts/run_case_study.py       Historical VaR and ES analysis
+scripts/run_case_study.py       Historical VaR, ES, and stress testing
 scripts/run_predictive_model.py Walk-forward predictive analysis
 src/market_risk_engine/         Reusable calculation functions
 tests/                          Unit tests for core calculations

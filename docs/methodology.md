@@ -56,7 +56,33 @@ ES(c) = mean loss from rank(c) through the worst scenario
 The approach preserves observed cross-asset co-movement, but it gives equal weight to
 old and recent scenarios and cannot create shocks that are absent from the window.
 
-## 3. Predictive Target
+## 3. Stress Testing
+
+Stress testing applies hypothetical percentage shocks directly to the current USD market
+value of each position.
+
+```text
+stress P&L(i) = current USD market value(i) × stress return(i)
+stress loss(i) = -stress P&L(i)
+portfolio stress loss = sum[stress loss(i)]
+```
+
+Three scenarios are evaluated:
+
+| Asset | Equity Selloff | Rates and Credit Shock | Broad Liquidity Crisis |
+| --- | ---: | ---: | ---: |
+| U.S. equity | -15% | -8% | -20% |
+| European equity | -20% | -10% | -22% |
+| U.S. government bonds | +3% | -7% | -3% |
+| U.S. investment-grade bonds | -4% | -9% | -12% |
+| U.S. high-yield bonds | -10% | -12% | -18% |
+| Gold | +5% | -3% | -8% |
+
+The European equity shocks represent simplified total USD returns and therefore include
+both equity-market and currency effects. The scenarios are deterministic sensitivity
+tests, not forecasts, and no probability is assigned to them.
+
+## 4. Predictive Target
 
 For each prediction date `t`, the trailing 252-day 10th percentile is calculated from
 portfolio returns available through `t`. The target is:
@@ -69,7 +95,7 @@ high_loss(t) = 0 otherwise
 The threshold is adaptive, so the target represents an unusually poor return relative
 to the recent market regime rather than a fixed dollar loss.
 
-## 4. Predictive Features
+## 5. Predictive Features
 
 ### Market features
 
@@ -91,7 +117,7 @@ to the recent market regime rather than a fixed dollar loss.
 Interest-rate observations are shifted by one day before merging. No feature uses the
 next-day return that defines the target.
 
-## 5. Models
+## 6. Models
 
 The 20-day volatility score is included as a simple non-ML benchmark. The statistical
 baseline is class-balanced Logistic Regression with standardized features. The nonlinear
@@ -101,7 +127,7 @@ learning rate 0.05, and class weighting based on the training fold.
 Hyperparameters remain fixed across all folds. The case study does not search many
 parameter combinations and then report only the best result.
 
-## 6. Walk-Forward Validation
+## 7. Walk-Forward Validation
 
 Six calendar-year folds are evaluated:
 
@@ -118,7 +144,7 @@ Training data expands through time, and each test year remains strictly later th
 training observations. Standardization and class weights are recalculated inside each
 training fold.
 
-## 7. Evaluation Metrics
+## 8. Evaluation Metrics
 
 Accuracy is not emphasized because roughly 10% of observations are high-loss events.
 The primary ranking metrics are ROC-AUC and Average Precision. Precision, recall, F1,
@@ -127,7 +153,7 @@ and confusion-matrix counts describe behavior at the fixed 50% alert threshold.
 Average Precision is compared with each year's event rate. A model must exceed that
 baseline to demonstrate useful concentration of rare events.
 
-## 8. Model Selection and Prediction
+## 9. Model Selection and Prediction
 
 The market-only Logistic model is retained as the primary specification because it has
 the highest mean Average Precision and mean F1 across the six walk-forward folds. The
@@ -147,6 +173,8 @@ distributions, the outputs are called risk scores rather than calibrated probabi
 - Model performance changes materially across years and regimes.
 - The target is defined by a rolling sample percentile rather than an external outcome.
 - Risk scores are not probability-calibrated.
+- Stress-test results depend on hypothetical shocks and do not estimate scenario
+  probabilities.
 - The analysis excludes derivatives, intraday risk, liquidity, costs, and market impact.
 
 VaR, Expected Shortfall, and predictive scores are estimates, not guaranteed loss bounds.

@@ -25,6 +25,7 @@ data/raw/*
 data/interim/*
 data/processed/*
 data/reference/*
+data/sample/*
 !data/**/.gitkeep
 
 # Detailed row-level model output is reproducible and not needed in the portfolio.

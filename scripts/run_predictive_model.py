@@ -61,8 +61,7 @@ model_data = create_predictive_features(model_data)
 model_data = add_interest_rate_features(model_data, interest_rates)
 
 walk_forward_metrics, walk_forward_predictions = walk_forward_evaluation(
-    model_data,
-    test_years=range(2020, 2026),
+    model_data, test_years=range(2020, 2026)
 )
 
 model_summary = walk_forward_metrics.groupby("model", as_index=False).agg(
@@ -129,42 +128,18 @@ for model_name, model, feature_columns in [
 
 latest_prediction = pd.DataFrame(prediction_rows)
 feature_importance = pd.DataFrame(
-    {
-        "feature": BASE_FEATURES,
-        "importance": xgb_model.feature_importances_,
-    }
+    {"feature": BASE_FEATURES, "importance": xgb_model.feature_importances_}
 ).sort_values("importance", ascending=False)
 logistic_coefficients = pd.DataFrame(
-    {
-        "feature": primary_features,
-        "coefficient": primary_model.coef_[0],
-    }
+    {"feature": primary_features, "coefficient": primary_model.coef_[0]}
 ).sort_values("coefficient")
 
-walk_forward_metrics.to_csv(
-    MODEL_RESULTS_DIR / "walk_forward_metrics.csv",
-    index=False,
-)
-walk_forward_predictions.to_csv(
-    MODEL_RESULTS_DIR / "walk_forward_predictions.csv",
-    index=False,
-)
-model_summary.to_csv(
-    MODEL_RESULTS_DIR / "model_summary.csv",
-    index=False,
-)
-feature_importance.to_csv(
-    MODEL_RESULTS_DIR / "feature_importance.csv",
-    index=False,
-)
-logistic_coefficients.to_csv(
-    MODEL_RESULTS_DIR / "logistic_coefficients.csv",
-    index=False,
-)
-latest_prediction.to_csv(
-    MODEL_RESULTS_DIR / "latest_prediction.csv",
-    index=False,
-)
+walk_forward_metrics.to_csv(MODEL_RESULTS_DIR / "walk_forward_metrics.csv", index=False)
+walk_forward_predictions.to_csv(MODEL_RESULTS_DIR / "walk_forward_predictions.csv", index=False)
+model_summary.to_csv(MODEL_RESULTS_DIR / "model_summary.csv", index=False)
+feature_importance.to_csv(MODEL_RESULTS_DIR / "feature_importance.csv", index=False)
+logistic_coefficients.to_csv(MODEL_RESULTS_DIR / "logistic_coefficients.csv", index=False)
+latest_prediction.to_csv(MODEL_RESULTS_DIR / "latest_prediction.csv", index=False)
 
 plt.style.use("seaborn-v0_8-whitegrid")
 model_order = [
@@ -223,9 +198,7 @@ short_labels = [
 
 figure, axes = plt.subplots(1, 2, figsize=(12, 5))
 axes[0].bar(
-    x_positions,
-    summary_chart["mean_roc_auc"],
-    color=[model_colors[name] for name in model_order],
+    x_positions, summary_chart["mean_roc_auc"], color=[model_colors[name] for name in model_order]
 )
 axes[0].axhline(0.50, color="#555555", linestyle="--", linewidth=1.5)
 axes[0].set_xticks(x_positions, short_labels)
@@ -240,10 +213,7 @@ axes[1].bar(
     color=[model_colors[name] for name in model_order],
 )
 axes[1].axhline(
-    summary_chart["mean_event_rate"].mean(),
-    color="#555555",
-    linestyle="--",
-    linewidth=1.5,
+    summary_chart["mean_event_rate"].mean(), color="#555555", linestyle="--", linewidth=1.5
 )
 axes[1].set_xticks(x_positions, short_labels)
 axes[1].set_ylim(0, 0.20)
@@ -260,8 +230,7 @@ primary_predictions = walk_forward_predictions.loc[
     walk_forward_predictions["model"] == primary_model_name
 ]
 precision_values, recall_values, _ = precision_recall_curve(
-    primary_predictions["actual"],
-    primary_predictions["risk_score"],
+    primary_predictions["actual"], primary_predictions["risk_score"]
 )
 pooled_event_rate = primary_predictions["actual"].mean()
 
@@ -302,14 +271,11 @@ plt.savefig(CHARTS_DIR / "xgboost_feature_importance.png", dpi=180)
 plt.close()
 
 coefficient_colors = [
-    "#4C78A8" if value < 0 else "#E45756"
-    for value in logistic_coefficients["coefficient"]
+    "#4C78A8" if value < 0 else "#E45756" for value in logistic_coefficients["coefficient"]
 ]
 plt.figure(figsize=(9, 5))
 plt.barh(
-    logistic_coefficients["feature"],
-    logistic_coefficients["coefficient"],
-    color=coefficient_colors,
+    logistic_coefficients["feature"], logistic_coefficients["coefficient"], color=coefficient_colors
 )
 plt.axvline(0, color="#555555", linewidth=1)
 plt.xlabel("Standardized Coefficient")

@@ -4,7 +4,7 @@
 
 The USD 100,000 hypothetical portfolio has meaningful but manageable one-day market
 risk under ordinary historical conditions. The 95% Historical Simulation VaR is USD
-625.92, while the 95% Expected Shortfall is USD 1,139.60. The difference shows that once
+625.91, while the 95% Expected Shortfall is USD 1,139.60. The difference shows that once
 the portfolio moves beyond the VaR threshold, losses become substantially more severe.
 
 Management should use VaR as a frequency-based threshold, Expected Shortfall as the
@@ -15,11 +15,11 @@ risk reduction would be most effective.
 
 | Measure | USD | Portfolio % |
 | --- | ---: | ---: |
-| 95% VaR | 625.92 | 0.63% |
+| 95% VaR | 625.91 | 0.63% |
 | 95% Expected Shortfall | 1,139.60 | 1.14% |
 | 99% VaR | 1,578.95 | 1.58% |
-| 99% Expected Shortfall | 1,997.08 | 2.00% |
-| Worst observed scenario | 2,705.91 | 2.71% |
+| 99% Expected Shortfall | 1,997.09 | 2.00% |
+| Worst observed scenario | 2,705.90 | 2.71% |
 
 The worst scenario is more than four times the 95% VaR. This is not a contradiction:
 VaR is a percentile threshold, not a maximum-loss estimate. Expected Shortfall and
@@ -36,6 +36,27 @@ to the equity decline. Gold lost approximately USD 234, demonstrating that an as
 commonly treated as a diversifier may still decline during a specific liquidity or
 risk-off event. Diversification should be evaluated by scenario rather than assumed from
 asset labels.
+
+## Stress-Test Findings
+
+| Scenario | Portfolio Loss | Portfolio % |
+| --- | ---: | ---: |
+| Equity Selloff | USD 8,000 | 8.00% |
+| Rates and Credit Shock | USD 8,150 | 8.15% |
+| Broad Liquidity Crisis | USD 14,300 | 14.30% |
+
+The Broad Liquidity Crisis produces the most severe loss because all major asset classes
+decline at the same time. The portfolio loses USD 14,300, substantially more than the
+USD 2,706 worst loss observed in the Historical Simulation window.
+
+The Equity Selloff scenario shows some diversification benefit from government bonds and
+gold. However, that protection disappears in the Broad Liquidity Crisis. This means the
+portfolio's apparent diversification depends on the relationships between asset classes
+remaining stable during periods of stress.
+
+These scenarios are hypothetical and are not forecasts. They do not estimate how likely
+each event is to occur. Their purpose is to show the financial impact if the assumed
+market shocks occur.
 
 ## Predictive Early-Warning Models
 
@@ -90,8 +111,8 @@ performed, 41.0% is a relative score rather than a literal event probability.
 2. Monitor equity contribution because equity drives the largest observed loss.
 3. Use the predictive score only as a secondary review trigger.
 4. Review results across regimes rather than relying on a single holdout year.
-5. Add scenario analysis for rate shocks, equity-credit selloffs, and failed
-   diversification before considering any operational deployment.
+5. Use the stress scenarios to evaluate whether an 8% to 14% portfolio loss is within
+   management's risk tolerance and available loss-absorbing capacity.
 6. Calibrate probabilities and define alert costs before presenting model scores as
    decision probabilities.
 
